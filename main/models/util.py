@@ -18,13 +18,13 @@ def print_metrics_multiclass(true, predicted):
     print sklearn.metrics.confusion_matrix(true, predicted, labels=LABELS)
     
 def filter_methods(METHODNAMES_IN, METHODS_IN, methodnames):
-    METHODS=[]
-    METHODNAMES=[]
+    METHODSMULTITASK=[]
+    METHODNAMESMULTITASK=[]
     for methodname in methodnames.split(","):
         try:
             ind = METHODNAMES_IN.index(methodname)
-            METHODS += [METHODS_IN[ind]]
-            METHODNAMES += [METHODNAMES_IN[ind]]
+            METHODSMULTITASK += [METHODS_IN[ind]]
+            METHODNAMESMULTITASK += [METHODNAMES_IN[ind]]
         except:
             pass
-    return METHODNAMES, METHODS
+    return METHODNAMESMULTITASK, METHODSMULTITASK

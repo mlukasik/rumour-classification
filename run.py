@@ -38,15 +38,15 @@ splitter = foldsplitter(X, POSTPROCESSED_TASK_COLUMN_ID, train_set_ratios)
 EVALUATION_MEASURES = [sklearn.metrics.accuracy_score]
 tasks_number=len(set(X[:, POSTPROCESSED_TASK_COLUMN_ID]))
 
-METHODS, METHODNAMES = get_methods_multitask(tasks_number, header, RANDOM_RESTARTS=RANDOM_RESTARTS)
+METHODSMULTITASK, METHODNAMESMULTITASK = get_methods_multitask(tasks_number, header, RANDOM_RESTARTS=RANDOM_RESTARTS)
 METHODSSINGLETASK, METHODNAMESSINGLETASK = get_methods_singletask(header, RANDOM_RESTARTS=RANDOM_RESTARTS)
 
 if methodname != None:
     #if we are interested in keeping only one method
-    METHODNAMES, METHODS = filter_methods(METHODNAMES, METHODS, methodname)
+    METHODNAMESMULTITASK, METHODSMULTITASK = filter_methods(METHODNAMESMULTITASK, METHODSMULTITASK, methodname)
     METHODNAMESSINGLETASK, METHODSSINGLETASK = filter_methods(METHODNAMESSINGLETASK, METHODSSINGLETASK, methodname)
 
-experiment = Experiment(X, y, train_set_ratios, FOLDTORUN, splitter, EVALUATION_MEASURES, METHODNAMES, METHODS, 
+experiment = Experiment(X, y, train_set_ratios, FOLDTORUN, splitter, EVALUATION_MEASURES, METHODNAMESMULTITASK, METHODSMULTITASK, 
                         METHODNAMESSINGLETASK, METHODSSINGLETASK, print_metrics=print_metrics_multiclass, 
                         RANDOM_RESTARTS=RANDOM_RESTARTS, results={}, header=header, filter_retweets=filter_retweets)
 experiment.run()

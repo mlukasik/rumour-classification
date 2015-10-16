@@ -24,7 +24,7 @@ def get_methods_multitask(tasks_number, header, RANDOM_RESTARTS=-1):
     GPCONSTRUCTOR=lambda kernel_constructor, name, RANDOM_RESTARTS: MCGP(kernel_constructor=kernel_constructor, 
                                                                          labels=LABELS, name=name, RANDOM_RESTARTS=RANDOM_RESTARTS)
     
-    METHODS=[
+    METHODSMULTITASK=[
              lambda: SklearnBaseline(lambda: DummyClassifier("most_frequent"), "MostFrequentPooled", [0]),
              lambda: GPCONSTRUCTOR(kernel_constructor=lambda: single_task_kernel(FEATURES_BOW, False, "FEATURES_BOW"), 
                                    name="BOWGPjoinedfeaturesPooledLIN", 
@@ -39,14 +39,14 @@ def get_methods_multitask(tasks_number, header, RANDOM_RESTARTS=-1):
                                                                                 single_task_kernel(FEATURES_BOW, False, "FEATURES_BOW")), 
                                                                                 name="BOWGPjoinedfeaturesICMLIN", RANDOM_RESTARTS=RANDOM_RESTARTS),
              ]
-    return METHODS, map(lambda x: x().name, METHODS)
+    return METHODSMULTITASK, map(lambda x: x().name, METHODSMULTITASK)
 
 def get_methods_singletask(header, RANDOM_RESTARTS=-1):
     FEATURES_BOW, FEATURES_BROWN, _, _=extract_feature_indices(header)
     GPCONSTRUCTOR=lambda kernel_constructor, name, RANDOM_RESTARTS: MCGP(kernel_constructor=kernel_constructor, labels=LABELS,
                                                                          name=name, RANDOM_RESTARTS=RANDOM_RESTARTS)
         
-    METHODS=[
+    METHODSMULTITASK=[
              lambda: SklearnBaseline(lambda: DummyClassifier("most_frequent"), "MostFrequent", [0]),
              lambda: GPCONSTRUCTOR(kernel_constructor=lambda: single_task_kernel(FEATURES_BOW, False, "BOW"), 
                                    name="BOWGPjoinedfeatures", 
@@ -55,7 +55,7 @@ def get_methods_singletask(header, RANDOM_RESTARTS=-1):
                                    name="BROWNGPjoinedfeatures", 
                                    RANDOM_RESTARTS=RANDOM_RESTARTS)
              ]
-    return METHODS, map(lambda x: x().name, METHODS)
+    return METHODSMULTITASK, map(lambda x: x().name, METHODSMULTITASK)
 
 def get_allmethodnames():
     tasks_number=1

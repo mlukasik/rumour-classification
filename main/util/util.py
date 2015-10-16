@@ -3,7 +3,7 @@ Copyright (c) 2014-2015, The University of Sheffield.
 This file is part of the SDQ rumour classification software 
 (see https://github.com/mlukasik/rumour-classification), 
 and is free software, licenced under the GNU Library General Public License,
-Version 2, June 1991 (in the distribution as file license.html).
+Version 2, June 1991 (in the distribution as file LICENSE).
 
 Created on 13 Mar 2015
 

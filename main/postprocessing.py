@@ -17,7 +17,7 @@ def metric_fixed_testset(a, b, train_perc, max_train):
     Find accuracy score for labels a and b only caring about
     what happens starting from max_train-train_perc.
     This is because we want to test methods on the same
-    test set, but they have varying training set.
+    test set, but they have varying training sets.
     '''
     start_index=max_train-train_perc
     return sklearn.metrics.accuracy_score(a[start_index:], b[start_index:])

@@ -23,31 +23,36 @@ from main.models.methods import get_methods_multitask,\
 from main.util.constants import LABELS, extract_feature_indices
 from main.models.util import print_metrics_multiclass
 
-initialize_seed_with_currtime()
-
-FOLDTORUN=int(sys.argv[1])
+foldtorun=int(sys.argv[1])
 methodname=sys.argv[2]
 train_set_ratios=[int(sys.argv[3])]
 fname=sys.argv[4]
-RANDOM_RESTARTS=int(sys.argv[5])
+random_restarts=int(sys.argv[5])
 filter_retweets=bool(int(sys.argv[6]))
+if len(sys.argv)>=8:
+    #if random number generator seed has been passed
+    seed=int(sys.argv[7])
+    import numpy as np
+    np.random.seed(seed)
+else:
+    initialize_seed_with_currtime()
 
 X, y, header = load_data(fname, labels_to_keep=LABELS)
-_, _, POSTPROCESSED_TASK_COLUMN_ID, _=extract_feature_indices(header)
-splitter = foldsplitter(X, POSTPROCESSED_TASK_COLUMN_ID, train_set_ratios)
-EVALUATION_MEASURES = [sklearn.metrics.accuracy_score]
-tasks_number=len(set(X[:, POSTPROCESSED_TASK_COLUMN_ID]))
+_, _, postprocessed_task_column_id, _=extract_feature_indices(header)
+splitter = foldsplitter(X, postprocessed_task_column_id, train_set_ratios)
+evaluation_measures = [sklearn.metrics.accuracy_score]
+tasks_number=len(set(X[:, postprocessed_task_column_id]))
 
-METHODSMULTITASK, METHODNAMESMULTITASK = get_methods_multitask(tasks_number, header, RANDOM_RESTARTS=RANDOM_RESTARTS)
-METHODSSINGLETASK, METHODNAMESSINGLETASK = get_methods_singletask(header, RANDOM_RESTARTS=RANDOM_RESTARTS)
+methodsmultitask, methodnamesmultitask = get_methods_multitask(tasks_number, header, random_restarts=random_restarts)
+methodssingletask, methodnamessingletask = get_methods_singletask(header, random_restarts=random_restarts)
 
 if methodname != None:
     #if we are interested in keeping only one method
-    METHODNAMESMULTITASK, METHODSMULTITASK = filter_methods(METHODNAMESMULTITASK, METHODSMULTITASK, methodname)
-    METHODNAMESSINGLETASK, METHODSSINGLETASK = filter_methods(METHODNAMESSINGLETASK, METHODSSINGLETASK, methodname)
+    methodnamesmultitask, methodsmultitask = filter_methods(methodnamesmultitask, methodsmultitask, methodname)
+    methodnamessingletask, methodssingletask = filter_methods(methodnamessingletask, methodssingletask, methodname)
 
-experiment = Experiment(X, y, train_set_ratios, FOLDTORUN, splitter, EVALUATION_MEASURES, METHODNAMESMULTITASK, METHODSMULTITASK, 
-                        METHODNAMESSINGLETASK, METHODSSINGLETASK, print_metrics=print_metrics_multiclass, 
-                        RANDOM_RESTARTS=RANDOM_RESTARTS, results={}, header=header, filter_retweets=filter_retweets)
+experiment = Experiment(X, y, train_set_ratios, foldtorun, splitter, evaluation_measures, methodnamesmultitask, methodsmultitask, 
+                        methodnamessingletask, methodssingletask, print_metrics=print_metrics_multiclass, 
+                        random_restarts=random_restarts, results={}, header=header, filter_retweets=filter_retweets)
 experiment.run()
 experiment.summarize()

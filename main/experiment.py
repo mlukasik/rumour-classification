@@ -16,69 +16,69 @@ class Experiment(object):
     '''
     Class governing the process of the Classification Experiment.
     '''
-    def __init__(self, X, y, train_set_ratios, FOLDTORUN, splitter, EVALUATION_MEASURES, 
-                 METHODNAMESMULTITASK, METHODSMULTITASK, METHODNAMESSINGLETASK, METHODSSINGLETASK, print_metrics,
-                 header, RANDOM_RESTARTS=-1, results={}, filter_retweets=True):
+    def __init__(self, X, y, train_set_ratios, foldtorun, splitter, evaluation_measures, 
+                 methodnamesmultitask, methodsmultitask, methodnamessingletask, methodssingletask, print_metrics,
+                 header, random_restarts=-1, results={}, filter_retweets=True):
         self.X = X
         self.y = y
-        self.METHODNAMESMULTITASK = METHODNAMESMULTITASK
-        self.METHODSMULTITASK = METHODSMULTITASK
-        self.METHODNAMESSINGLETASK = METHODNAMESSINGLETASK
-        self.METHODSSINGLETASK = METHODSSINGLETASK
-        self.FOLDTORUN = FOLDTORUN
+        self.methodnamesmultitask = methodnamesmultitask
+        self.methodsmultitask = methodsmultitask
+        self.methodnamessingletask = methodnamessingletask
+        self.methodssingletask = methodssingletask
+        self.foldtorun = foldtorun
         self.splitter = splitter
-        self.EVALUATION_MEASURES=EVALUATION_MEASURES
+        self.evaluation_measures=evaluation_measures
         self.print_metrics = print_metrics
         self.results = results
         self.header=header
-        _, _, self.POSTPROCESSED_TASK_COLUMN_ID, self.RTTYPECOL_PROCESSED_COLUMN_ID=extract_feature_indices(header)
-        self.METHODNAMES_ALL = self.METHODNAMESMULTITASK+self.METHODNAMESSINGLETASK
+        _, _, self.postprocessed_task_column_id, self.rttypecol_processed_column_id=extract_feature_indices(header)
+        self.methodnames_all = self.methodnamesmultitask+self.methodnamessingletask
         self.filter_retweets = filter_retweets
 
     def run(self):
         for foldind, (train, test) in enumerate(self.splitter):
-            if self.FOLDTORUN==-1 or self.FOLDTORUN==foldind:
+            if self.foldtorun==-1 or self.foldtorun==foldind:
                 
                 settings_dict={}
                 settings_dict['multitask']=(self.X[train, :], self.X[test, :], self.y[train], self.y[test], 
-                            self.METHODNAMESMULTITASK, 
-                            self.METHODSMULTITASK)
-                settings_dict['singletask']=(self.X[train, :][self.X[train][:,self.POSTPROCESSED_TASK_COLUMN_ID]==
-                                              self.X[test, :][0,self.POSTPROCESSED_TASK_COLUMN_ID]], 
+                            self.methodnamesmultitask, 
+                            self.methodsmultitask)
+                settings_dict['singletask']=(self.X[train, :][self.X[train][:,self.postprocessed_task_column_id]==
+                                              self.X[test, :][0,self.postprocessed_task_column_id]], 
                              self.X[test, :], 
-                             self.y[train][self.X[train, :][:,self.POSTPROCESSED_TASK_COLUMN_ID]==
-                                           self.X[test, :][0,self.POSTPROCESSED_TASK_COLUMN_ID]], 
+                             self.y[train][self.X[train, :][:,self.postprocessed_task_column_id]==
+                                           self.X[test, :][0,self.postprocessed_task_column_id]], 
                              self.y[test],
-                             self.METHODNAMESSINGLETASK, 
-                             self.METHODSSINGLETASK)
+                             self.methodnamessingletask, 
+                             self.methodssingletask)
                 
                 for v in settings_dict.values():
-                    X_train, X_test, y_train, y_test, METHODNAMESMULTITASK, METHODSMULTITASK = v
+                    x_train, x_test, y_train, y_test, methodnamesmultitask, methodsmultitask = v
                     if self.filter_retweets:
-                        #filtering out simple RT
-                        y_train=y_train[X_train[:, self.RTTYPECOL_PROCESSED_COLUMN_ID]!=1]
-                        X_train=X_train[X_train[:, self.RTTYPECOL_PROCESSED_COLUMN_ID]!=1, :]
-                    for methodname, method_constructor in zip(METHODNAMESMULTITASK, METHODSMULTITASK):
+                        #filtering out simple rt
+                        y_train=y_train[x_train[:, self.rttypecol_processed_column_id]!=1]
+                        x_train=x_train[x_train[:, self.rttypecol_processed_column_id]!=1, :]
+                    for methodname, method_constructor in zip(methodnamesmultitask, methodsmultitask):
                         method = method_constructor()
-                        result = self.evaluate_method(X_train, X_test, y_train, y_test, method, 
+                        result = self.evaluate_method(x_train, x_test, y_train, y_test, method, 
                                                       summarize_kernel=False)
                         self.results[methodname] = self.results.get(methodname, [])+[result]
 
-    def evaluate_method(self, X_train, X_test, y_train, y_test, method, summarize_kernel):
-        method.fit(X_train, y_train)
-        y_mean = method.predict(X_test)
+    def evaluate_method(self, x_train, x_test, y_train, y_test, method, summarize_kernel):
+        method.fit(x_train, y_train)
+        y_mean = method.predict(x_test)
         print "y_predicted:"+",".join(map(str, y_mean))
         print "y_true:"+",".join(map(str, y_test))
         self.print_metrics(y_test, y_mean)
-        results=[EVALUATION_MEASURE(y_test, y_mean) for EVALUATION_MEASURE in self.EVALUATION_MEASURES]
+        results=[evaluation_measure(y_test, y_mean) for evaluation_measure in self.evaluation_measures]
         return results
     
     def summarize(self):
         print "[Experiment.summarize]"
         print "method", "mean", "std", "sample"
         import sys
-        print >> sys.stderr, "FOLDTORUN: "+str(self.FOLDTORUN)+":"+str(self.results)
-        for ind, _ in enumerate(self.EVALUATION_MEASURES):
-            for key in self.METHODNAMES_ALL:
+        print >> sys.stderr, "foldtorun: "+str(self.foldtorun)+":"+str(self.results)
+        for ind, _ in enumerate(self.evaluation_measures):
+            for key in self.methodnames_all:
                 value = map(lambda x: x[ind], self.results[key])
                 print key, np.mean(value), np.std(value), len(value)

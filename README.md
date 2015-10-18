@@ -26,6 +26,11 @@ You need to install the following Python libraries (and their dependencies):
 To reproduce the experiments, run script: RUN.sh. 
 This will run the experiments, generate the resulting text files in the "results" folder 
 and gather the mean accuracy values for different settings.
+This may take very long time and the results might be slightly different from the reported in the paper due to different seed for the random number generator 
+(in main.util.seeds_emnlp2015.py you can find seeds we used for our EMNLP 2015 experiments for the ICM methods).
+
+In script RUN_PARALLEL.sh is the parallelized version of the experiments, appropriate for the Iceberg server from the University of Sheffield. 
+If you have access to it (or if you modify the script so that it runs in your parallel environment), after running the script you will need to run "python gather_results.py results" to analyze the results.
 
 #Closing remarks
 If you find this code useful, please let us know (m dot lukasik at sheffield dot ac dot uk) and cite our paper.

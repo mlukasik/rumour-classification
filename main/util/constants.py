@@ -20,8 +20,8 @@ IS_SIMPLE_RETWEET_FEATURENAME="is_simple_retweet"
 TIME_FEATURENAME='time'
 
 def extract_feature_indices(header):
-    FEATURES_BOW=[ind for ind, name in enumerate(header) if name.startswith(BOW_FEATURENAMES_PREFIX)]
-    FEATURES_BROWN=[ind for ind, name in enumerate(header) if name.startswith(BROWN_FEATURENAMES_PREFIX)]
+    features_bow=[ind for ind, name in enumerate(header) if name.startswith(BOW_FEATURENAMES_PREFIX)]
+    features_brown=[ind for ind, name in enumerate(header) if name.startswith(BROWN_FEATURENAMES_PREFIX)]
     index_task=header.index(TASK_FEATURENAME)
-    RTTYPECOL_PROCESSED=header.index(IS_SIMPLE_RETWEET_FEATURENAME)
-    return FEATURES_BOW, FEATURES_BROWN, index_task, RTTYPECOL_PROCESSED
+    rttypecol_processed=header.index(IS_SIMPLE_RETWEET_FEATURENAME)
+    return features_bow, features_brown, index_task, rttypecol_processed

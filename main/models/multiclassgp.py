@@ -15,11 +15,11 @@ class MCGP(object):
     '''
     Multi Class Gaussian Process Classifier, implemented as One vs All.
     '''
-    def __init__(self, kernel_constructor, labels, name=None, RANDOM_RESTARTS=-1, 
+    def __init__(self, kernel_constructor, labels, name=None, random_restarts=-1, 
                  optimize=True):
         self.k_constructor = kernel_constructor
         self.name = name
-        self.RANDOM_RESTARTS = RANDOM_RESTARTS
+        self.RANDOM_RESTARTS = random_restarts
         self.optimize = optimize
         
     def fit(self, X, y):

@@ -16,10 +16,15 @@ Here we provide a processed data file used for experiments:
 If you would like to access the England riots dataset please contact Procter et al.
 
 #Dependencies
-You need to install the following Python libraries (and their dependencies): 
-* sklearn, 
-* scipy, 
-* GPy.
+You need to install a number of Python libraries, e.g. by typing the following: 
+* pip install nltk==3.0.1
+* pip install numpy==1.9.1
+* pip install scipy==0.15.1
+* pip install cloud==2.8.5
+* pip install scikit-learn==0.15.2
+* pip install git+git://github.com/SheffieldML/GPy.git@98f632e92ec5fafaca2683ba10cf8fc1fa2296cc
+* pip install matplotlib==1.4.2
+
 
 #Running
 To reproduce the experiments, run script: RUN.sh. 

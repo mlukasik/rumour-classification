@@ -15,10 +15,6 @@ Here we provide a processed data file used for experiments:
 
 If you would like to access the England riots dataset please contact Procter et al.
 
-If you would like to access code used to preprocess Twitter json files, see repository: 
-(we will provide path to the repository once we put it publicly on-line),
-which has been used to do the preprocessing for our experiments.
-
 #Dependencies
 You need to install the following Python libraries (and their dependencies): 
 * sklearn, 

@@ -38,4 +38,4 @@ If you have access to it (or if you modify the script so that it runs in your pa
 #Closing remarks
 If you find this code useful, please let us know (m dot lukasik at sheffield dot ac dot uk) and cite our paper.
 
-This work was patially supported by the European Union under Grant Agreement No. 611233 PHEME (http://www.pheme.eu).
+This work was partially supported by the European Union under Grant Agreement No. 611233 PHEME (http://www.pheme.eu).
